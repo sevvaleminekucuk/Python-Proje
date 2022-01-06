@@ -116,7 +116,7 @@ class Page2(Page):
         label.config(text='Aracınızın mevcut şarjını giriniz: ', bg="orange", fg="black", font=('Arial',10))
         label.place(x=100, y=78)
 
-
+        ## git test 2
         self.giris = Entry(self)
         self.giris.pack()
         self.giris.place(x=300, y=80)

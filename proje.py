@@ -110,14 +110,12 @@ class Page1(Page):
 
 class Page2(Page):
     def __init__(self, *args, **kwargs):
-        ## git test
         Page.__init__(self, *args, **kwargs)
 
         label = Label(self)
         label.config(text='Aracınızın mevcut şarjını giriniz: ', bg="orange", fg="black", font=('Arial',10))
         label.place(x=100, y=78)
 
-        ## git test 2
         self.giris = Entry(self)
         self.giris.pack()
         self.giris.place(x=300, y=80)

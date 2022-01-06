@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 class CreateToolTip(object):
+    # dosya 2 test 1
     
     """
     create a tooltip for a given widget

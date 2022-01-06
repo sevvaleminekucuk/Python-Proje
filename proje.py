@@ -110,6 +110,7 @@ class Page1(Page):
 
 class Page2(Page):
     def __init__(self, *args, **kwargs):
+        ## git test
         Page.__init__(self, *args, **kwargs)
 
         label = Label(self)

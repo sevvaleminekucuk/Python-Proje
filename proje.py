@@ -5,7 +5,6 @@ import mouseImage
 import googlemaps
 from datetime import datetime
 from pymongo import MongoClient
-# from pprint import pprint as print
 
 host="localhost"
 port=27017
@@ -19,7 +18,7 @@ except:
 
 collection = db['Araçlar']
 
-gmaps = googlemaps.Client(key="AIzaSyC-U82YTDFyM8Uu7cbe1990VIEoYDkX9Mk")
+gmaps = googlemaps.Client(key="") # key adresi kullanım süresi dolduğu için çalışmıyor
 now = datetime.now()
 
 results = client.geolocate
@@ -92,12 +91,12 @@ class Page1(Page):
         buton=Button(self)
         buton.config(text="Zoe ZE40",bg="black",fg = "white",width=15,height=1,font=("Arial",15), command = lambda : self.master.AracSec("renault", "zoe ze40"))
         buton.place(x=350,y=310)
-        mouseImage.CreateToolTip(buton, 'car_images/zoe.png')
+        mouseImage.CreateToolTip(buton, 'car_images/zoe_ze_40.jpg')
 
         buton=Button(self)
         buton.config(text="Zoe ZE50",bg="black",fg = "white",width=15,height=1,font=("Arial",15), command = lambda : self.master.AracSec("renault", "zoe ze50"))
         buton.place(x=350,y=350)
-        mouseImage.CreateToolTip(buton, 'car_images/bmw.png')
+        mouseImage.CreateToolTip(buton, 'car_images/zoe_ze_50.jpg')
 
         label=Label(self)
         label.config(text="Hyundai",bg="pink",fg = "black",width=15,height=1,font=("Arial",20))
@@ -221,9 +220,6 @@ class MainView(Frame):
     def BilgiGir(self, giris, giris1, giris2):
 
         if self.marka == "" or self.model == "":
-            # self.p2.label5.pack()
-            # self.p2.label5.place(x=220, y=250)
-            # self.p2.label5.config(text = "Arac secilmedi.", bg="red", font=15)
             messagebox.showinfo("DİKKAT", "\tAraç Seçimi Yapmadınız\nLütfen Ana Sayfaya Dönüp Bir Araç Seçiniz")
             return
         else:
@@ -238,7 +234,7 @@ class MainView(Frame):
                 super().__init__()
 
         def err():
-            if int(giris) < 0 or int(giris) > 100:
+            if int(giris) <= 0 or int(giris) > 100:
                 raise AralıkException()
             else:
                 return
@@ -270,19 +266,14 @@ class MainView(Frame):
             return
 
         sonuc = collection.find({'Model': self.model})
-        for i in sonuc:
+        for i in sonuc:   # degerler veri tabanından çekiliyor
             ortTuketim = i["Ortalama Tüketim"] 
             pilKapasitesi = i["Pil Kapasitesi"]
 
         try:
             directions_result = gmaps.directions(coords_0, coords_1, mode="driving", departure_time=now, avoid='highway', language = 'tr')
             leg = directions_result[0].get("legs")[0]
-            # self.p2.label5.pack_forget()
-            # self.p2.label5.place_forget()
         except (googlemaps.exceptions.HTTPError, googlemaps.exceptions.ApiError):
-            # self.p2.label5.pack()
-            # self.p2.label5.place(x=200, y=250)
-            # self.p2.label5.config(text = "Rota olusturulamadi", bg="red", font=15)
             self.p2.label3.pack_forget()
             self.p2.label3.place_forget()
             self.p2.label4.pack_forget()
@@ -304,15 +295,14 @@ class MainView(Frame):
             self.p2.label2.pack_forget()
             self.p2.label2.place_forget()
             return
-        # print(directions_result[0])
 
         menzil = float(leg.get("distance").get("value"))/1000
         pilTuketimi = (menzil/100)* ortTuketim
         pilYuzdesi = ilkSarj-((pilTuketimi/pilKapasitesi)*100)
 
         def err(gelenDeger):
-            if gelenDeger<5:
-                raise ValueError ("Lütfen Yol Üstünde Şarj Ediniz")
+            if gelenDeger < 5:
+                raise ValueError ("Lütfen Aracınızı Yol Üzerinde Şarj Ediniz")
             else:
                 return gelenDeger
 
